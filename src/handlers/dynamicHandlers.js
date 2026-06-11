@@ -342,23 +342,24 @@ module.exports = (bot) => {
             vendorContact: contact
         });
 
-        // Display contact details
-        let text = `📞 *${vendorName}*\n\n`;
-        text += `📱 *Contact Number:* \`${contact}\`\n`;
-        text += `✨ *Tap number to copy, or use buttons below to connect directly!*`;
-
         const cleanContact = contact.replace(/\D/g, '');
-        const inlineButtons = [
-            [Markup.button.url('📞 Call Now', `tel:${cleanContact}`)]
-        ];
-        if (cleanContact) {
-            const bookNowLabel = await t(ctx.from.id, 'book_now_btn') || 'Book Now';
-            inlineButtons[0].push(Markup.button.url(`💬 WhatsApp`, `https://wa.me/91${cleanContact}`));
-        }
 
-        await ctx.reply(text, {
-            parse_mode: 'Markdown',
-            ...Markup.inlineKeyboard(inlineButtons)
-        });
+        // 1. Send native contact card (fully clickable to call natively in Telegram)
+        const formattedContact = cleanContact.startsWith('91') && cleanContact.length > 10 ? `+${cleanContact}` : `+91${cleanContact}`;
+        await ctx.replyWithContact(formattedContact, vendorName);
+
+        // 2. Send follow-up WhatsApp inline link
+        if (cleanContact) {
+            const cleanNumberOnly = cleanContact.length > 10 && cleanContact.startsWith('91') ? cleanContact.slice(2) : cleanContact;
+            const waLink = `https://wa.me/91${cleanNumberOnly}`;
+            const bookNowLabel = await t(ctx.from.id, 'book_now_btn') || 'Book Now';
+            
+            await ctx.reply(`💬 Tap below to chat with *${vendorName}* on WhatsApp:`, {
+                parse_mode: 'Markdown',
+                ...Markup.inlineKeyboard([
+                    [Markup.button.url(`💬 ${bookNowLabel} on WhatsApp`, waLink)]
+                ])
+            });
+        }
     }
 };
