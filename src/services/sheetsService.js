@@ -75,27 +75,57 @@ function parseCSV(data) {
 const syncFromSheets = async () => {
     try {
         logger.info('🔄 Starting Google Sheets synchronization...');
+        const syncErrors = [];
 
         const hotelSheetUrl = process.env.SHEET_URL_HOTELS;
         const vendorSheetUrl = process.env.SHEET_URL_VENDORS;
         const taxiSheetUrl = process.env.SHEET_URL_TAXIS;
         const tentSheetUrl = process.env.SHEET_URL_TENTS;
         const emergencySheetUrl = process.env.SHEET_URL_EMERGENCY;
-
-        if (hotelSheetUrl) await syncHotels(hotelSheetUrl);
-        if (vendorSheetUrl) await syncVendors(vendorSheetUrl);
-        if (taxiSheetUrl) await syncTaxis(taxiSheetUrl);
-        if (tentSheetUrl) await syncTents(tentSheetUrl);
-        if (emergencySheetUrl) await syncEmergencyContacts(emergencySheetUrl);
-        
         const parkingSheetUrl = process.env.SHEET_URL_PARKING;
-        if (parkingSheetUrl) await syncParking(parkingSheetUrl);
-        
         const placesSheetUrl = process.env.SHEET_URL_PLACES;
-        if (placesSheetUrl) await syncPlaces(placesSheetUrl);
+
+        if (hotelSheetUrl) {
+            try { await syncHotels(hotelSheetUrl); }
+            catch (err) { logger.error('Hotels Sync Failed:', err.message); syncErrors.push(`Hotels (${err.message})`); }
+        }
+        if (vendorSheetUrl) {
+            try { await syncVendors(vendorSheetUrl); }
+            catch (err) { logger.error('Vendors Sync Failed:', err.message); syncErrors.push(`Vendors (${err.message})`); }
+        }
+        if (taxiSheetUrl) {
+            try { await syncTaxis(taxiSheetUrl); }
+            catch (err) { logger.error('Taxis Sync Failed:', err.message); syncErrors.push(`Taxis (${err.message})`); }
+        }
+        if (tentSheetUrl) {
+            try { await syncTents(tentSheetUrl); }
+            catch (err) { logger.error('Tents Sync Failed:', err.message); syncErrors.push(`Tents (${err.message})`); }
+        }
+        if (emergencySheetUrl) {
+            try { await syncEmergencyContacts(emergencySheetUrl); }
+            catch (err) { logger.error('Emergency Sync Failed:', err.message); syncErrors.push(`Emergency (${err.message})`); }
+        }
+        if (parkingSheetUrl) {
+            try { await syncParking(parkingSheetUrl); }
+            catch (err) { logger.error('Parking Sync Failed:', err.message); syncErrors.push(`Parking (${err.message})`); }
+        }
+        if (placesSheetUrl && !placesSheetUrl.includes('YOUR_TOURIST_PLACES_GID_HERE')) {
+            try { await syncPlaces(placesSheetUrl); }
+            catch (err) { logger.error('Places Sync Failed:', err.message); syncErrors.push(`Places (${err.message})`); }
+        } else if (placesSheetUrl) {
+            logger.warn('Skipping Places Sync: Placeholder GID found in SHEET_URL_PLACES.');
+        }
 
         // Clear high-performance in-memory cache to load new data instantly
         cache.clear();
+
+        if (syncErrors.length > 0) {
+            logger.warn(`⚠️ Sync finished with some failures: ${syncErrors.join(', ')}`);
+            return { 
+                success: false, 
+                message: `Sync partially failed. Errors in: ${syncErrors.join(', ')}` 
+            };
+        }
 
         logger.info('✅ Synchronization completed successfully.');
         return { success: true, message: 'All data synced successfully' };
