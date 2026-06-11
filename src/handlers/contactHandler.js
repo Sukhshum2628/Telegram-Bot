@@ -106,23 +106,26 @@ module.exports = (bot) => {
         });
 
         const cleanContact = contact.replace(/\D/g, '');
+        const cleanNumberOnly = cleanContact.length > 10 && cleanContact.startsWith('91') ? cleanContact.slice(2) : cleanContact;
+        const formattedPhone = `+91${cleanNumberOnly}`;
 
-        // 1. Send native contact card (fully clickable to call natively in Telegram)
-        const formattedContact = cleanContact.startsWith('91') && cleanContact.length > 10 ? `+${cleanContact}` : `+91${cleanContact}`;
-        await ctx.replyWithContact(formattedContact, vendorName);
+        // 1. Display plain text call links and copy blocks in message
+        let text = `📞 *${vendorName}*\n\n`;
+        text += `📱 *Tap to Call:* ${formattedPhone}\n`;
+        text += `📋 *Tap to Copy:* \`${formattedPhone}\`\n\n`;
+        text += `✨ Use the button below to connect on WhatsApp directly:`;
 
-        // 2. Send follow-up WhatsApp inline link
+        // 2. Send WhatsApp inline link
+        const inlineButtons = [];
         if (cleanContact) {
-            const cleanNumberOnly = cleanContact.length > 10 && cleanContact.startsWith('91') ? cleanContact.slice(2) : cleanContact;
             const waLink = `https://wa.me/91${cleanNumberOnly}`;
             const bookNowLabel = await t(ctx.from.id, 'book_now_btn') || 'Book Now';
-            
-            await ctx.reply(`💬 Tap below to chat with *${vendorName}* on WhatsApp:`, {
-                parse_mode: 'Markdown',
-                ...Markup.inlineKeyboard([
-                    [Markup.button.url(`💬 ${bookNowLabel} on WhatsApp`, waLink)]
-                ])
-            });
+            inlineButtons.push([Markup.button.url(`💬 ${bookNowLabel} on WhatsApp`, waLink)]);
         }
+
+        await ctx.reply(text, {
+            parse_mode: 'Markdown',
+            ...Markup.inlineKeyboard(inlineButtons)
+        });
     }
 };
