@@ -1,0 +1,57 @@
+<h2><%= hotel ? 'Edit Hotel' : 'Add New Hotel' %></h2>
+<div class="card p-4 mt-4">
+    <form action="<%= hotel ? '/admin/hotels/edit/' + hotel._id : '/admin/hotels/new' %>" method="POST">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Hotel Name</label>
+                <input type="text" name="name" class="form-control" value="<%= hotel ? hotel.name : '' %>" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Contact Number</label>
+                <input type="text" name="contact" class="form-control" value="<%= hotel ? hotel.contact : '' %>" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label>Price Range</label>
+                <input type="text" name="priceRange" class="form-control" value="<%= hotel ? hotel.priceRange : '' %>">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Distance from Temple</label>
+                <input type="text" name="distance" class="form-control" value="<%= hotel ? hotel.distance : '' %>">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Listing Tier</label>
+                <select name="tier" class="form-control">
+                    <option value="free" <%= hotel && hotel.tier === 'free' ? 'selected' : '' %>>Free</option>
+                    <option value="basic" <%= hotel && hotel.tier === 'basic' ? 'selected' : '' %>>Basic</option>
+                    <option value="featured" <%= hotel && hotel.tier === 'featured' ? 'selected' : '' %>>Featured</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Latitude</label>
+                <input type="number" step="any" name="lat" class="form-control" value="<%= hotel ? hotel.lat : '' %>">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Longitude</label>
+                <input type="number" step="any" name="lng" class="form-control" value="<%= hotel ? hotel.lng : '' %>">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label>Google Maps Link</label>
+            <input type="text" name="mapsLink" class="form-control" value="<%= hotel ? hotel.mapsLink : '' %>">
+        </div>
+        <div class="mb-3">
+            <label>Photo URL</label>
+            <input type="text" name="photo" class="form-control" value="<%= hotel ? hotel.photo : '' %>">
+        </div>
+        <div class="form-check mb-3">
+            <input type="checkbox" name="active" class="form-check-input" id="activeCheck" <%= !hotel || hotel.active ? 'checked' : '' %>>
+            <label class="form-check-label" for="activeCheck">Active Listing</label>
+        </div>
+        <button type="submit" class="btn btn-success"><%= hotel ? 'Update Hotel' : 'Create Hotel' %></button>
+        <a href="/admin/hotels" class="btn btn-link">Cancel</a>
+    </form>
+</div>

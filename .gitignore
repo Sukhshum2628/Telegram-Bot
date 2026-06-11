@@ -1,0 +1,22 @@
+# Dependency directories
+node_modules/
+
+# Local configuration files
+.env
+.env.production
+.env.local
+
+# Log files
+*.log
+combined.log
+error.log
+
+# System files & IDE directories
+.DS_Store
+.idea/
+.vscode/
+.antigravity/
+.gemini/
+scratch/
+bin/
+obj/

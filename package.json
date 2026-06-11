@@ -1,0 +1,29 @@
+{
+  "name": "machail-mata-telegram-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.13.6",
+    "body-parser": "^2.2.2",
+    "dotenv": "^17.3.1",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "i18n": "^0.15.3",
+    "mongoose": "^9.2.3",
+    "node-cron": "^4.2.1",
+    "p-queue": "^9.1.0",
+    "p-retry": "^7.1.1",
+    "telegraf": "^4.16.3",
+    "telegraf-ratelimit": "^2.0.0",
+    "winston": "^3.19.0"
+  }
+}

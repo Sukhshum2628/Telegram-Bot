@@ -1,0 +1,40 @@
+<h2>🏨 Hotel Management</h2>
+<div class="mt-4">
+    <a href="/admin/hotels/new" class="btn btn-primary mb-3">+ Add New Hotel</a>
+    <div class="table-responsive">
+        <table class="table table-striped card p-3">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Tier</th>
+                    <th>Status</th>
+                    <th>Expiry</th>
+                    <th>Distance</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% hotels.forEach(h => { %>
+                    <tr>
+                        <td><strong><%= h.name %></strong></td>
+                        <td>
+                            <span class="badge <%= h.tier === 'featured' ? 'bg-warning text-dark' : (h.tier === 'basic' ? 'bg-info' : 'bg-secondary') %>">
+                                <%= h.tier.toUpperCase() %>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge <%= h.active ? 'bg-success' : 'bg-danger' %>">
+                                <%= h.active ? 'Active' : 'Hidden' %>
+                            </span>
+                        </td>
+                        <td><%= h.expiryDate ? h.expiryDate.toDateString() : 'N/A' %></td>
+                        <td><%= h.distance %></td>
+                        <td>
+                            <a href="/admin/hotels/edit/<%= h._id %>" class="btn btn-sm btn-outline-primary">Edit</a>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: machail_mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  bot:
+    build: .
+    container_name: machail_bot
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGO_URI=mongodb://mongodb:27017/machail-mata-bot
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - ADMIN_USER_IDS=${ADMIN_USER_IDS}
+      - ADMIN_PANEL_USER=${ADMIN_PANEL_USER}
+      - ADMIN_PANEL_PASS=${ADMIN_PANEL_PASS}
+      - PREMIUM_PRICE=${PREMIUM_PRICE}
+      - BASIC_LISTING_PRICE=${BASIC_LISTING_PRICE}
+      - FEATURED_LISTING_PRICE=${FEATURED_LISTING_PRICE}
+      - UPI_ID=${UPI_ID}
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
+      - SHEET_URL_HOTELS=${SHEET_URL_HOTELS}
+      - SHEET_URL_VENDORS=${SHEET_URL_VENDORS}
+      - SHEET_URL_TAXIS=${SHEET_URL_TAXIS}
+      - SHEET_URL_TENTS=${SHEET_URL_TENTS}
+      - SHEET_URL_EMERGENCY=${SHEET_URL_EMERGENCY}
+      - SHEET_URL_PARKING=${SHEET_URL_PARKING}
+      - SHEET_URL_PLACES=${SHEET_URL_PLACES}
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:

@@ -1,0 +1,75 @@
+<h2>📊 Command Center</h2>
+<div class="row mt-4">
+    <div class="col-md-2 col-sm-4 mb-3">
+        <div class="card text-center p-3 h-100">
+            <h3><%= stats.totalUsers %></h3>
+            <p class="text-muted small">Total Users</p>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-4 mb-3">
+        <div class="card text-center p-3 h-100">
+            <h3 class="text-primary"><%= stats.premiumUsers %></h3>
+            <p class="text-muted small">Premium Subscribers</p>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-4 mb-3">
+        <div class="card text-center p-3 h-100">
+            <h3 class="text-success"><%= stats.activeListings %></h3>
+            <p class="text-muted small">Active Paid Listings</p>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card text-center p-3 h-100">
+            <h3 class="text-info"><%= stats.totalLeads %></h3>
+            <p class="text-muted small">Affiliate Leads Logged</p>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-6 mb-3">
+        <div class="card text-center p-3 h-100">
+            <h3><%= stats.interactions %></h3>
+            <p class="text-muted small">Interactions</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h4>⚡ Quick Actions</h4>
+            <div class="d-grid gap-2 mt-3">
+                <a href="/admin/hotels/new" class="btn btn-primary">+ Add New Hotel</a>
+                <a href="/admin/vendors/new" class="btn btn-outline-primary">+ Add New Vendor</a>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#broadcastModal">📢 Global Broadcast</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h4>💎 Activate Pilgrim Subscription</h4>
+            <form action="/admin/subscriptions/activate" method="POST" class="mt-3">
+                <div class="input-group">
+                    <input type="text" name="userId" placeholder="Telegram User ID (e.g. 12345678)" class="form-control" required>
+                    <button class="btn btn-success">Activate (30 Days)</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Broadcast Modal -->
+<div class="modal fade" id="broadcastModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/admin/broadcast" method="POST">
+                <div class="modal-header"><h5>Send Broadcast</h5></div>
+                <div class="modal-body">
+                    <textarea name="message" class="form-control" rows="5" placeholder="Type your urgent update here..." required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Confirm & Send to All</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
